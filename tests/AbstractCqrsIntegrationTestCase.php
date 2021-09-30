@@ -10,7 +10,6 @@
 
 namespace SoureCode\Bundle\Cqrs\Tests;
 
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use SoureCode\Bundle\User\Repository\UserRepositoryInterface;
 use SoureCode\Component\Cqrs\CommandBusInterface;
