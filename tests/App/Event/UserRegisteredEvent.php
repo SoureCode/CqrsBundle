@@ -18,7 +18,6 @@ use Symfony\Component\Uid\Ulid;
  */
 class UserRegisteredEvent implements EventInterface
 {
-
     private Ulid $tokenId;
     private Ulid $userId;
 
@@ -37,5 +36,4 @@ class UserRegisteredEvent implements EventInterface
     {
         return $this->userId;
     }
-
 }

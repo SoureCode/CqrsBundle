@@ -42,7 +42,7 @@ class UserRegisteredEventHandler implements EventHandlerInterface
             ->subject('Welcome!')
             ->html(
                 sprintf(
-                    "Welcome! <strong>%s</strong>. Your registration token id: %s",
+                    'Welcome! <strong>%s</strong>. Your registration token id: %s',
                     $user->getDisplayName(),
                     $event->getTokenId()->toRfc4122()
                 )

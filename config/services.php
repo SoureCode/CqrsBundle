@@ -28,5 +28,4 @@ return static function (ContainerConfigurator $container) {
     $services
         ->alias(QueryBusInterface::class, 'soure_code.cqrs.query_bus')
         ->public();
-
 };

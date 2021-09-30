@@ -11,12 +11,10 @@
 namespace SoureCode\Bundle\Cqrs\Tests\App\CommandHandler;
 
 use SoureCode\Bundle\Cqrs\Tests\App\Command\RegisterUserCommand;
-use SoureCode\Bundle\Cqrs\Tests\App\Entity\AppUser;
 use SoureCode\Bundle\Cqrs\Tests\App\Event\UserRegisteredEvent;
 use SoureCode\Component\Cqrs\CommandHandlerInterface;
 use SoureCode\Component\Cqrs\EventBusInterface;
 use SoureCode\Component\User\UserFactoryInterface;
-use SoureCode\Component\User\UserFieldsUpdaterInterface;
 use SoureCode\Component\User\UserPersisterInterface;
 use SoureCode\Component\User\UserTokenFactoryInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -27,7 +25,6 @@ use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
  */
 class RegisterUserCommandHandler implements CommandHandlerInterface
 {
-
     private EventBusInterface $eventBus;
     private UserFactoryInterface $userFactory;
     private UserPersisterInterface $userPersister;

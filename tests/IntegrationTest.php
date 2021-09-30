@@ -11,7 +11,6 @@
 namespace SoureCode\Bundle\Cqrs\Tests;
 
 use SoureCode\Bundle\Cqrs\Tests\App\Command\RegisterUserCommand;
-use SoureCode\Bundle\Cqrs\Tests\App\Entity\AppUser;
 use SoureCode\Bundle\Cqrs\Tests\App\Query\GetUserQuery;
 use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 use Symfony\Component\Uid\Ulid;
@@ -44,5 +43,4 @@ class IntegrationTest extends AbstractCqrsIntegrationTestCase
 
         self::assertEmailCount(1);
     }
-
 }

@@ -17,7 +17,7 @@ use SoureCode\Component\User\Model\User;
  * @author Jason Schilling <jason@sourecode.dev>
  */
 #[ORM\Entity]
-#[ORM\Table(name: "`user`")]
+#[ORM\Table(name: '`user`')]
 class AppUser extends User
 {
 }

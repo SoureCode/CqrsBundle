@@ -6,10 +6,8 @@ use SoureCode\Component\Cqrs\CommandHandlerInterface;
 use SoureCode\Component\Cqrs\EventHandlerInterface;
 use SoureCode\Component\Cqrs\QueryHandlerInterface;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\Configurator\InstanceofConfigurator;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -39,7 +37,6 @@ class SoureCodeCqrsExtension extends Extension
         $eventBusHandlerDefinition = new Definition();
         $eventBusHandlerDefinition->setInstanceofConditionals([
         ]);
-
 
         $container->registerForAutoconfiguration(EventHandlerInterface::class)
             ->addTag('messenger.message_handler', ['bus' => $config['event_bus']['message_bus_id']]);

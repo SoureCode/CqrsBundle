@@ -44,7 +44,6 @@ class Configuration implements ConfigurationInterface
         // @formatter:on
 
         return $rootNode;
-
     }
 
     private function getCommandBusConfig(): ArrayNodeDefinition
@@ -78,5 +77,4 @@ class Configuration implements ConfigurationInterface
 
         return $rootNode;
     }
-
 }
