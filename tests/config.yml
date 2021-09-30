@@ -1,0 +1,83 @@
+soure_code_cqrs:
+    event_bus:
+        message_bus_id: event.bus
+    command_bus:
+        message_bus_id: command.bus
+    query_bus:
+        message_bus_id: query.bus
+
+soure_code_token:
+    tokens:
+        register:
+            expiration: PT1H
+
+soure_code_user:
+    class: SoureCode\Bundle\Cqrs\Tests\App\Entity\AppUser
+
+stof_doctrine_extensions:
+    default_locale: en_US
+    orm:
+        default:
+            timestampable: true
+
+doctrine:
+    dbal:
+        override_url: true
+        url: '%env(DATABASE_URL)%'
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: 'doctrine.orm.naming_strategy.underscore_number_aware'
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/Entity'
+                prefix: 'SoureCode\Bundle\Cqrs\Tests\App'
+                alias: App
+
+framework:
+    mailer:
+        dsn: 'null://null'
+    validation:
+        enabled: true
+    messenger:
+        default_bus: command.bus
+        buses:
+            command.bus:
+                middleware:
+                    - validation
+                    - doctrine_transaction
+            query.bus:
+                middleware:
+                    - validation
+            event.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - validation
+
+security:
+    enable_authenticator_manager: true
+    password_hashers:
+        SoureCode\Bundle\Cqrs\Tests\App\Entity\AppUser:
+            algorithm: auto
+    providers:
+        entity_user_provider:
+            entity:
+                class: SoureCode\Bundle\Cqrs\Tests\App\Entity\AppUser
+                property: email
+    firewalls:
+        main:
+            user_checker: soure_code.user.checker.user
+            http_basic:
+                realm: Secured Area
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    SoureCode\Bundle\Cqrs\Tests\App\:
+        resource: './App/'
+        exclude:
+            - './App/Entity/'
