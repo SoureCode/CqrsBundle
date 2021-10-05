@@ -10,8 +10,8 @@
 
 namespace SoureCode\Bundle\Cqrs\Test;
 
-use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 use PHPUnit\Framework\Constraint;
+use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
@@ -38,7 +38,7 @@ trait MessengerAssertionsTrait
         $items = [];
 
         foreach ($dispatchedMessages as $dispatchedMessage) {
-            if(is_a($dispatchedMessage['message'], $type)) {
+            if (is_a($dispatchedMessage['message'], $type)) {
                 $items[] = $dispatchedMessage;
             }
         }

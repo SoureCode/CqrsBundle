@@ -11,11 +11,8 @@
 namespace SoureCode\Bundle\Cqrs\Tests\App\CommandHandler;
 
 use SoureCode\Bundle\Cqrs\Tests\App\Command\CreateProductCommand;
-use SoureCode\Bundle\Cqrs\Tests\App\Command\CreateTableCommand;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Product;
-use SoureCode\Bundle\Cqrs\Tests\App\Entity\Table;
 use SoureCode\Bundle\Cqrs\Tests\App\Event\ProductCreatedEvent;
-use SoureCode\Bundle\Cqrs\Tests\App\Event\TableCreatedEvent;
 use SoureCode\Bundle\Cqrs\Tests\App\Repository\ProductRepository;
 use SoureCode\Component\Cqrs\CommandHandlerInterface;
 

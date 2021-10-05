@@ -14,7 +14,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ManagerRegistry;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Order;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Price;
-use SoureCode\Bundle\Cqrs\Tests\App\Entity\Product;
 
 /**
  * @template-extends AbstractRepository<Price>

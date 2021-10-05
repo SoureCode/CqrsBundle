@@ -12,7 +12,6 @@ namespace SoureCode\Bundle\Cqrs\Tests\App\Repository;
 
 use Doctrine\Persistence\ManagerRegistry;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Product;
-use SoureCode\Bundle\Cqrs\Tests\App\Entity\Tab;
 
 /**
  * @template-extends AbstractRepository<Product>

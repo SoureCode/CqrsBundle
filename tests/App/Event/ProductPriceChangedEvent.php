@@ -18,7 +18,6 @@ use Symfony\Component\Uid\Ulid;
  */
 class ProductPriceChangedEvent implements EventInterface
 {
-
     private Ulid $id;
 
     public function __construct(Ulid $id)

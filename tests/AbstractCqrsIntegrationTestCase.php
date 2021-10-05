@@ -16,8 +16,6 @@ use SoureCode\Component\Cqrs\EventBusInterface;
 use SoureCode\Component\Cqrs\QueryBusInterface;
 use SoureCode\Component\Test\ApplicationTrait;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
-use Symfony\Component\Messenger\TraceableMessageBus;
-use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>

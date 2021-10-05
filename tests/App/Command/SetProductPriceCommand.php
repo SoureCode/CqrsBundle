@@ -51,5 +51,4 @@ class SetProductPriceCommand implements CommandInterface
     {
         return $this->productId;
     }
-
 }

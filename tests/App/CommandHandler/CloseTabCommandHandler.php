@@ -96,5 +96,5 @@ class CloseTabCommandHandler implements CommandHandlerInterface
         }
 
         return $total;
-}
+    }
 }

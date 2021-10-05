@@ -37,6 +37,6 @@ class TabRepository extends AbstractRepository
 
         $query = $queryBuilder->getQuery();
 
-        return ((int)$query->getSingleScalarResult()) > 0;
+        return ((int) $query->getSingleScalarResult()) > 0;
     }
 }

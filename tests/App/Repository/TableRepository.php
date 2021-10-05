@@ -11,7 +11,6 @@
 namespace SoureCode\Bundle\Cqrs\Tests\App\Repository;
 
 use Doctrine\Persistence\ManagerRegistry;
-use SoureCode\Bundle\Cqrs\Tests\App\Entity\Order;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Table;
 
 /**
