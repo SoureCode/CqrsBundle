@@ -23,8 +23,7 @@
         "sourecode/cqrs": "dev-master"
     },
     "require-dev": {
-        "nyholm/symfony-bundle-test": "dev-master",
-        "symfony/validator": "^5.3 || ^6.0"
+        "nyholm/symfony-bundle-test": "dev-master"
     },
     "autoload": {
         "psr-4": {

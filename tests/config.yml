@@ -6,20 +6,6 @@ soure_code_cqrs:
     query_bus:
         message_bus_id: query.bus
 
-soure_code_token:
-    tokens:
-        register:
-            expiration: PT1H
-
-soure_code_user:
-    class: SoureCode\Bundle\Cqrs\Tests\App\Entity\AppUser
-
-stof_doctrine_extensions:
-    default_locale: en_US
-    orm:
-        default:
-            timestampable: true
-
 doctrine:
     dbal:
         override_url: true
@@ -38,13 +24,12 @@ doctrine:
                 alias: App
 
 framework:
-    mailer:
-        dsn: 'null://null'
     validation:
         enabled: true
     messenger:
-        default_bus: command.bus
+        default_bus: main.bus
         buses:
+            main.bus: ~
             command.bus:
                 middleware:
                     - validation
@@ -57,22 +42,6 @@ framework:
                 middleware:
                     - validation
 
-security:
-    enable_authenticator_manager: true
-    password_hashers:
-        SoureCode\Bundle\Cqrs\Tests\App\Entity\AppUser:
-            algorithm: auto
-    providers:
-        entity_user_provider:
-            entity:
-                class: SoureCode\Bundle\Cqrs\Tests\App\Entity\AppUser
-                property: email
-    firewalls:
-        main:
-            user_checker: soure_code.user.checker.user
-            http_basic:
-                realm: Secured Area
-
 services:
     _defaults:
         autowire: true
@@ -82,3 +51,21 @@ services:
         resource: './App/'
         exclude:
             - './App/Entity/'
+
+    command.bus.test:
+        public: true
+        decorates: command.bus
+        class: Symfony\Component\Messenger\TraceableMessageBus
+        arguments: ['@.inner']
+
+    event.bus.test:
+        public: true
+        decorates: event.bus
+        class: Symfony\Component\Messenger\TraceableMessageBus
+        arguments: [ '@.inner' ]
+
+    query.bus.test:
+        public: true
+        decorates: query.bus
+        class: Symfony\Component\Messenger\TraceableMessageBus
+        arguments: [ '@.inner' ]

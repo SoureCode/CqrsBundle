@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace SoureCode\Bundle\Cqrs\Tests\App\Query;
+namespace SoureCode\Bundle\Cqrs\Tests\App\Event;
 
-use SoureCode\Component\Cqrs\QueryInterface;
+use SoureCode\Component\Cqrs\EventInterface;
 use Symfony\Component\Uid\Ulid;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  */
-class GetUserQuery implements QueryInterface
+class OrderPlacedEvent implements EventInterface
 {
     private Ulid $id;
 

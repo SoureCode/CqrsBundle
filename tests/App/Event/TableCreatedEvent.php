@@ -16,24 +16,17 @@ use Symfony\Component\Uid\Ulid;
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  */
-class UserRegisteredEvent implements EventInterface
+class TableCreatedEvent implements EventInterface
 {
-    private Ulid $tokenId;
-    private Ulid $userId;
+    private Ulid $id;
 
-    public function __construct(Ulid $userId, Ulid $tokenId)
+    public function __construct(Ulid $id)
     {
-        $this->userId = $userId;
-        $this->tokenId = $tokenId;
+        $this->id = $id;
     }
 
-    public function getTokenId(): Ulid
+    public function getId(): Ulid
     {
-        return $this->tokenId;
-    }
-
-    public function getUserId(): Ulid
-    {
-        return $this->userId;
+        return $this->id;
     }
 }

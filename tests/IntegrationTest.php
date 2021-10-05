@@ -10,9 +10,19 @@
 
 namespace SoureCode\Bundle\Cqrs\Tests;
 
-use SoureCode\Bundle\Cqrs\Tests\App\Command\RegisterUserCommand;
-use SoureCode\Bundle\Cqrs\Tests\App\Query\GetUserQuery;
-use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
+use SoureCode\Bundle\Cqrs\Test\MessengerAssertionsTrait;
+use SoureCode\Bundle\Cqrs\Tests\App\Command\CloseTabCommand;
+use SoureCode\Bundle\Cqrs\Tests\App\Command\CreateProductCommand;
+use SoureCode\Bundle\Cqrs\Tests\App\Command\CreateTableCommand;
+use SoureCode\Bundle\Cqrs\Tests\App\Command\OpenTabCommand;
+use SoureCode\Bundle\Cqrs\Tests\App\Command\PlaceOrderCommand;
+use SoureCode\Bundle\Cqrs\Tests\App\Command\ServeOrderCommand;
+use SoureCode\Bundle\Cqrs\Tests\App\Command\SetProductPriceCommand;
+use SoureCode\Bundle\Cqrs\Tests\App\Entity\Order;
+use SoureCode\Bundle\Cqrs\Tests\App\Entity\Price;
+use SoureCode\Bundle\Cqrs\Tests\App\Entity\Product;
+use SoureCode\Bundle\Cqrs\Tests\App\Entity\Tab;
+use SoureCode\Bundle\Cqrs\Tests\App\Entity\Table;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -20,27 +30,41 @@ use Symfony\Component\Uid\Ulid;
  */
 class IntegrationTest extends AbstractCqrsIntegrationTestCase
 {
-    use MailerAssertionsTrait;
+    use MessengerAssertionsTrait;
 
-    public function testRegisterUser(): void
+    public function testBusinessCase(): void
     {
-        // Arrange
-        $id = new Ulid();
-        $command = new RegisterUserCommand($id, 'jason.schilling@sourecode.dev', 'foobar123');
+        $this->commandBus->dispatch(new CreateProductCommand($productId = new Ulid(), 'Pizza'));
+        $this->commandBus->dispatch(new CreateTableCommand($tableId = new Ulid()));
+        $this->commandBus->dispatch(new OpenTabCommand($tabId = new Ulid(), $tableId));
+        $this->commandBus->dispatch(new SetProductPriceCommand(new Ulid(), $productId, 499));
+        $this->commandBus->dispatch(new PlaceOrderCommand($order1 = new Ulid(), $tabId, $productId));
 
-        // Act
-        $this->commandBus->dispatch($command);
-        $user = $this->queryBus->handle(new GetUserQuery($id));
+        // Need to sleep a second to ensure the effective at timestamp in price is different
+        sleep(1);
+
+        $this->commandBus->dispatch(new SetProductPriceCommand(new Ulid(), $productId, 299));
+        $this->commandBus->dispatch(new PlaceOrderCommand($order2 = new Ulid(), $tabId, $productId));
+
+        $this->commandBus->dispatch(new ServeOrderCommand($order1));
+        $this->commandBus->dispatch(new ServeOrderCommand($order2));
+
+        $this->commandBus->dispatch(new CloseTabCommand($tabId, 1000, 800));
 
         // Assert
-        $this->entityManager->clear();
+        $products = $this->entityManager->getRepository(Product::class)->findAll();
+        $tables = $this->entityManager->getRepository(Table::class)->findAll();
+        $tabs = $this->entityManager->getRepository(Tab::class)->findAll();
+        $orders = $this->entityManager->getRepository(Order::class)->findAll();
+        $prices = $this->entityManager->getRepository(Price::class)->findAll();
 
-        $users = $this->repository->findAll();
-        self::assertCount(1, $users);
+        self::assertCount(1, $products);
+        self::assertCount(1, $tables);
+        self::assertCount(1, $tabs);
+        self::assertCount(2, $orders);
+        self::assertCount(2, $prices);
 
-        self::assertSame('jason.schilling@sourecode.dev', $user->getEmail());
-        self::assertSame($id->toRfc4122(), $user->getId()->toRfc4122());
-
-        self::assertEmailCount(1);
+        self::assertMessageCount(10, 'command');
+        self::assertMessageCount(10, 'event');
     }
 }

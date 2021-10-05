@@ -12,26 +12,24 @@ namespace SoureCode\Bundle\Cqrs\Tests\App\Command;
 
 use SoureCode\Component\Cqrs\CommandInterface;
 use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  */
-class RegisterUserCommand implements CommandInterface
+class CreateProductCommand implements CommandInterface
 {
-    private string $email;
-    private string $password;
+    #[Assert\NotBlank]
+    #[Assert\Ulid]
     private Ulid $id;
 
-    public function __construct(Ulid $id, string $email, string $password)
+    #[Assert\NotBlank]
+    private string $name;
+
+    public function __construct(Ulid $id, string $name)
     {
         $this->id = $id;
-        $this->email = $email;
-        $this->password = $password;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
+        $this->name = $name;
     }
 
     public function getId(): Ulid
@@ -39,8 +37,8 @@ class RegisterUserCommand implements CommandInterface
         return $this->id;
     }
 
-    public function getPassword(): string
+    public function getName(): string
     {
-        return $this->password;
+        return $this->name;
     }
 }

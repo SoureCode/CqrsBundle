@@ -11,12 +11,13 @@
 namespace SoureCode\Bundle\Cqrs\Tests;
 
 use Doctrine\ORM\EntityManager;
-use SoureCode\Bundle\User\Repository\UserRepositoryInterface;
 use SoureCode\Component\Cqrs\CommandBusInterface;
 use SoureCode\Component\Cqrs\EventBusInterface;
 use SoureCode\Component\Cqrs\QueryBusInterface;
 use SoureCode\Component\Test\ApplicationTrait;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Symfony\Component\Messenger\TraceableMessageBus;
+use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
@@ -25,11 +26,13 @@ abstract class AbstractCqrsIntegrationTestCase extends AbstractCqrsTestCase
 {
     use ApplicationTrait;
 
-    protected ?EntityManager $entityManager = null;
     protected ?CommandBusInterface $commandBus = null;
+
+    protected ?EntityManager $entityManager = null;
+
     protected ?EventBusInterface $eventBus = null;
+
     protected ?QueryBusInterface $queryBus = null;
-    protected ?UserRepositoryInterface $repository = null;
 
     protected function setUp(): void
     {
@@ -45,8 +48,6 @@ abstract class AbstractCqrsIntegrationTestCase extends AbstractCqrsTestCase
         $this->eventBus = $container->get(EventBusInterface::class);
         $this->commandBus = $container->get(CommandBusInterface::class);
         $this->queryBus = $container->get(QueryBusInterface::class);
-
-        $this->repository = $container->get(UserRepositoryInterface::class);
 
         $this->executeCommand([
             'command' => 'doctrine:database:drop',
@@ -72,8 +73,6 @@ abstract class AbstractCqrsIntegrationTestCase extends AbstractCqrsTestCase
     {
         $this->entityManager->close();
         $this->entityManager = null;
-
-        $this->repository = null;
 
         $this->eventBus = null;
         $this->commandBus = null;
