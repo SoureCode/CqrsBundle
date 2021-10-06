@@ -64,7 +64,10 @@ class IntegrationTest extends AbstractCqrsIntegrationTestCase
         self::assertCount(2, $orders);
         self::assertCount(2, $prices);
 
-        self::assertMessageCount(10, 'command');
-        self::assertMessageCount(10, 'event');
+        $commandBus = self::getTestBus('command.bus');
+        $eventBus = self::getTestBus('event.bus');
+
+        $commandBus->getDispatchedEnvelopes()->assertCount(10);
+        $eventBus->getDispatchedEnvelopes()->assertCount(10);
     }
 }

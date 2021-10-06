@@ -15,7 +15,6 @@ use Nyholm\BundleTest\TestKernel;
 use SoureCode\Bundle\Cqrs\SoureCodeCqrsBundle;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Zenstruck\Messenger\Test\ZenstruckMessengerTestBundle;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
@@ -29,7 +28,6 @@ abstract class AbstractCqrsTestCase extends KernelTestCase
          */
         $kernel = parent::createKernel($options);
         $kernel->addTestBundle(SoureCodeCqrsBundle::class);
-        $kernel->addTestBundle(ZenstruckMessengerTestBundle::class);
         $kernel->addTestBundle(DoctrineBundle::class);
         $kernel->setTestProjectDir(__DIR__.'/App');
         $kernel->addTestConfig(__DIR__.'/config.yml');
