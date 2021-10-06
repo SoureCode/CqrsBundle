@@ -12,6 +12,7 @@ namespace SoureCode\Bundle\Cqrs\Tests\App\Repository;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ManagerRegistry;
+use SoureCode\Bundle\Common\Repository\AbstractRepository;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Order;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Price;
 
