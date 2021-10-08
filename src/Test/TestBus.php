@@ -31,7 +31,7 @@ class TestBus
         $envelopes = [];
 
         foreach ($messages as $message) {
-            $envelopes[] = Envelope::wrap($message['message'], $message['stamps']);
+            $envelopes[] = new TestEnvelope(Envelope::wrap($message['message'], $message['stamps']));
         }
 
         return new TestEnvelopeCollection($envelopes);

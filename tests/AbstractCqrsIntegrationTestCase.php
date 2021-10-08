@@ -11,9 +11,7 @@
 namespace SoureCode\Bundle\Cqrs\Tests;
 
 use Doctrine\ORM\EntityManager;
-use SoureCode\Component\Cqrs\CommandBusInterface;
-use SoureCode\Component\Cqrs\EventBusInterface;
-use SoureCode\Component\Cqrs\QueryBusInterface;
+use SoureCode\Bundle\Cqrs\Test\CqrsTestTrait;
 use SoureCode\Component\Test\ApplicationTrait;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
@@ -23,14 +21,9 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
 abstract class AbstractCqrsIntegrationTestCase extends AbstractCqrsTestCase
 {
     use ApplicationTrait;
-
-    protected ?CommandBusInterface $commandBus = null;
+    use CqrsTestTrait;
 
     protected ?EntityManager $entityManager = null;
-
-    protected ?EventBusInterface $eventBus = null;
-
-    protected ?QueryBusInterface $queryBus = null;
 
     protected function setUp(): void
     {
@@ -43,9 +36,7 @@ abstract class AbstractCqrsIntegrationTestCase extends AbstractCqrsTestCase
         $registry = $container->get('doctrine');
         $this->entityManager = $registry->getManager();
 
-        $this->eventBus = $container->get(EventBusInterface::class);
-        $this->commandBus = $container->get(CommandBusInterface::class);
-        $this->queryBus = $container->get(QueryBusInterface::class);
+        self::setUpCqrs();
 
         $this->executeCommand([
             'command' => 'doctrine:database:drop',
@@ -69,15 +60,12 @@ abstract class AbstractCqrsIntegrationTestCase extends AbstractCqrsTestCase
 
     protected function tearDown(): void
     {
+        $this->entityManager->getConnection()->close();
         $this->entityManager->close();
         $this->entityManager = null;
 
-        $this->eventBus = null;
-        $this->commandBus = null;
-        $this->queryBus = null;
-
-        self::ensureApplicationShutdown();
-        self::$application = null;
+        self::tearDownCqrs();
+        self::tearDownApplication();
 
         parent::tearDown();
     }
