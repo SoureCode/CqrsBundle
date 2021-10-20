@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the SoureCode package.
+ *
+ * (c) Jason Schilling <jason@sourecode.dev>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SoureCode\Bundle\Cqrs\DependencyInjection;
 
@@ -33,6 +41,10 @@ class Configuration implements ConfigurationInterface
     private function getEventBusConfig(): ArrayNodeDefinition
     {
         $treeBuilder = new TreeBuilder('event_bus');
+
+        /**
+         * @var ArrayNodeDefinition $rootNode
+         */
         $rootNode = $treeBuilder->getRootNode();
 
         // @formatter:off
@@ -49,6 +61,10 @@ class Configuration implements ConfigurationInterface
     private function getCommandBusConfig(): ArrayNodeDefinition
     {
         $treeBuilder = new TreeBuilder('command_bus');
+
+        /**
+         * @var ArrayNodeDefinition $rootNode
+         */
         $rootNode = $treeBuilder->getRootNode();
 
         // @formatter:off
@@ -65,6 +81,10 @@ class Configuration implements ConfigurationInterface
     private function getQueryBusConfig(): ArrayNodeDefinition
     {
         $treeBuilder = new TreeBuilder('query_bus');
+
+        /**
+         * @var ArrayNodeDefinition $rootNode
+         */
         $rootNode = $treeBuilder->getRootNode();
 
         // @formatter:off

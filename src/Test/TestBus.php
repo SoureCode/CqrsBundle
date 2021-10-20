@@ -11,6 +11,7 @@
 namespace SoureCode\Bundle\Cqrs\Test;
 
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Stamp\StampInterface;
 use Symfony\Component\Messenger\TraceableMessageBus;
 
 /**
@@ -27,6 +28,9 @@ class TestBus
 
     public function getDispatchedEnvelopes(): TestEnvelopeCollection
     {
+        /**
+         * @var list<array{message: object, stamps: list<StampInterface>}> $messages
+         */
         $messages = $this->bus->getDispatchedMessages();
         $envelopes = [];
 

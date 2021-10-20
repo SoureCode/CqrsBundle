@@ -20,10 +20,28 @@ use PHPUnit\Framework\TestCase;
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  *
- * @extends  ArrayCollection<array-key, TestEnvelope>
+ * @extends ArrayCollection<array-key, TestEnvelope>
  */
 class TestEnvelopeCollection extends ArrayCollection
 {
+    /**
+     * @param class-string $messageClass
+     *
+     * @return $this
+     */
+    public function assertContains(string $messageClass, ?int $amount = null, string $message = ''): static
+    {
+        $messages = $this->messages($messageClass);
+
+        TestCase::assertThat($messages, new Constraint\LogicalNot(new Constraint\IsEmpty()), $message);
+
+        if (null !== $amount) {
+            TestCase::assertThat($messages, new Constraint\Count($amount), $message);
+        }
+
+        return $this;
+    }
+
     /**
      * @param ?class-string $messageClass
      *
@@ -46,45 +64,37 @@ class TestEnvelopeCollection extends ArrayCollection
         );
     }
 
-    public function assertCount(int $amount, string $message = '')
+    public function assertCount(int $amount, string $message = ''): static
     {
         TestCase::assertThat($this, new Constraint\Count($amount), $message);
 
         return $this;
     }
 
-    public function assertEmpty(string $message = '')
+    public function assertEmpty(string $message = ''): static
     {
         TestCase::assertThat($this, new Constraint\IsEmpty(), $message);
 
         return $this;
     }
 
-    public function assertNotEmpty(string $message = '')
-    {
-        TestCase::assertThat($this, new Constraint\LogicalNot(new Constraint\IsEmpty()), $message);
-
-        return $this;
-    }
-
-    public function assertContains(string $messageClass, ?int $amount = null, string $message = '')
-    {
-        $messages = $this->messages($messageClass);
-
-        TestCase::assertThat($messages, new Constraint\LogicalNot(new Constraint\IsEmpty()), $message);
-
-        if (null !== $amount) {
-            TestCase::assertThat($messages, new Constraint\Count($amount), $message);
-        }
-
-        return $this;
-    }
-
-    public function assertNotContains(string $messageClass, string $message = '')
+    /**
+     * @param class-string $messageClass
+     *
+     * @return $this
+     */
+    public function assertNotContains(string $messageClass, string $message = ''): static
     {
         $messages = $this->messages($messageClass);
 
         TestCase::assertThat($messages, new Constraint\IsEmpty(), $message);
+
+        return $this;
+    }
+
+    public function assertNotEmpty(string $message = ''): static
+    {
+        TestCase::assertThat($this, new Constraint\LogicalNot(new Constraint\IsEmpty()), $message);
 
         return $this;
     }

@@ -8,7 +8,6 @@ soure_code_cqrs:
 
 doctrine:
     dbal:
-        override_url: true
         url: '%env(DATABASE_URL)%'
         logging: false
     orm:
@@ -23,10 +22,21 @@ doctrine:
                 prefix: 'SoureCode\Bundle\Cqrs\Tests\App'
                 alias: App
 
+monolog:
+    handlers:
+        main:
+            type: fingers_crossed
+            action_level: error
+            handler: streamed
+        streamed:
+            type: console
+            level: debug
+
 framework:
     validation:
         enabled: true
     messenger:
+        reset_on_message: true
         default_bus: main.bus
         buses:
             main.bus: ~

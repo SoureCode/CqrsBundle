@@ -13,6 +13,7 @@ namespace SoureCode\Bundle\Cqrs\Test;
 use PHPUnit\Framework\Constraint;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Stamp\StampInterface;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
@@ -26,18 +27,32 @@ class TestEnvelope
         $this->envelope = $envelope;
     }
 
-    public function assertHasStamp(string $stampClass, string $message = ''): self
+    /**
+     * @param class-string<StampInterface> $stampClass
+     *
+     * @return $this
+     */
+    public function assertHasStamp(string $stampClass, string $message = ''): static
     {
         $stamps = $this->envelope->all($stampClass);
 
         TestCase::assertThat($stamps, new Constraint\LogicalNot(new Constraint\IsEmpty()), $message);
+
+        return $this;
     }
 
-    public function assertNotHasStamp(string $stampClass, string $message = ''): self
+    /**
+     * @param class-string<StampInterface> $stampClass
+     *
+     * @return $this
+     */
+    public function assertNotHasStamp(string $stampClass, string $message = ''): static
     {
         $stamps = $this->envelope->all($stampClass);
 
         TestCase::assertThat($stamps, new Constraint\IsEmpty(), $message);
+
+        return $this;
     }
 
     public function getEnvelope(): Envelope

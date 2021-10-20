@@ -14,6 +14,7 @@ use SoureCode\Component\Cqrs\EventBus;
 use SoureCode\Component\Cqrs\EventBusInterface;
 use SoureCode\Component\Cqrs\QueryBus;
 use SoureCode\Component\Cqrs\QueryBusInterface;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_arg;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
@@ -28,6 +29,7 @@ return static function (ContainerConfigurator $container) {
 
     $services->set('soure_code.cqrs.command_bus', CommandBus::class)
         ->args([
+            abstract_arg('$messageBus'),
             service('soure_code.cqrs.event_bus'),
         ]);
 

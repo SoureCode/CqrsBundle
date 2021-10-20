@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the SoureCode package.
+ *
+ * (c) Jason Schilling <jason@sourecode.dev>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SoureCode\Bundle\Cqrs\DependencyInjection;
 
@@ -19,6 +27,13 @@ class SoureCodeCqrsExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
+        /**
+         * @var array{
+         *      event_bus: array{message_bus_id: string},
+         *      command_bus: array{message_bus_id: string},
+         *      query_bus: array{message_bus_id: string}
+         * } $config
+         */
         $config = $this->processConfiguration($configuration, $configs);
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
 
@@ -28,7 +43,7 @@ class SoureCodeCqrsExtension extends Extension
         $eventBusDefinition->addArgument(new Reference($config['event_bus']['message_bus_id']));
 
         $commandBusDefinition = $container->getDefinition('soure_code.cqrs.command_bus');
-        $commandBusDefinition->addArgument(new Reference($config['command_bus']['message_bus_id']));
+        $commandBusDefinition->setArgument('$messageBus', new Reference($config['command_bus']['message_bus_id']));
 
         $queryBusDefinition = $container->getDefinition('soure_code.cqrs.query_bus');
         $queryBusDefinition->addArgument(new Reference($config['query_bus']['message_bus_id']));

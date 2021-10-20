@@ -14,6 +14,7 @@ use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Nyholm\BundleTest\TestKernel;
 use SoureCode\Bundle\Cqrs\SoureCodeCqrsBundle;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -28,6 +29,7 @@ abstract class AbstractCqrsTestCase extends KernelTestCase
          */
         $kernel = parent::createKernel($options);
         $kernel->addTestBundle(SoureCodeCqrsBundle::class);
+        $kernel->addTestBundle(MonologBundle::class);
         $kernel->addTestBundle(DoctrineBundle::class);
         $kernel->setTestProjectDir(__DIR__.'/App');
         $kernel->addTestConfig(__DIR__.'/config.yml');
