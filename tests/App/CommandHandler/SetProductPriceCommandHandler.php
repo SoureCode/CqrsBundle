@@ -13,9 +13,9 @@ namespace SoureCode\Bundle\Cqrs\Tests\App\CommandHandler;
 use DateTimeImmutable;
 use SoureCode\Bundle\Cqrs\Tests\App\Command\SetProductPriceCommand;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Price;
+use SoureCode\Bundle\Cqrs\Tests\App\Entity\Product;
 use SoureCode\Bundle\Cqrs\Tests\App\Event\ProductPriceChangedEvent;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\PriceRepository;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\ProductRepository;
+use SoureCode\Bundle\Cqrs\Tests\App\Storage;
 use SoureCode\Component\Cqrs\CommandHandlerInterface;
 
 /**
@@ -23,14 +23,11 @@ use SoureCode\Component\Cqrs\CommandHandlerInterface;
  */
 class SetProductPriceCommandHandler implements CommandHandlerInterface
 {
-    private PriceRepository $priceRepository;
+    private Storage $storage;
 
-    private ProductRepository $productRepository;
-
-    public function __construct(ProductRepository $productRepository, PriceRepository $priceRepository)
+    public function __construct(Storage $storage)
     {
-        $this->productRepository = $productRepository;
-        $this->priceRepository = $priceRepository;
+        $this->storage = $storage;
     }
 
     public function __invoke(SetProductPriceCommand $command)
@@ -38,14 +35,19 @@ class SetProductPriceCommandHandler implements CommandHandlerInterface
         $id = $command->getId();
         $productPrice = $command->getProductId();
 
-        $product = $this->productRepository->get($productPrice);
+        /**
+         * @var Product $product
+         */
+        $product = $this->storage->get((string) $productPrice);
 
         $price = new Price($id);
         $price->setProduct($product);
         $price->setEffectiveAt(new DateTimeImmutable());
         $price->setValue($command->getPrice());
 
-        $this->priceRepository->persist($price);
+        $product->addPrice($price);
+
+        $this->storage->set((string) $id, $price);
 
         return yield new ProductPriceChangedEvent($id);
     }

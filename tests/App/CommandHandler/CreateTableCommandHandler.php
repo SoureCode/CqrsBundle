@@ -13,7 +13,7 @@ namespace SoureCode\Bundle\Cqrs\Tests\App\CommandHandler;
 use SoureCode\Bundle\Cqrs\Tests\App\Command\CreateTableCommand;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Table;
 use SoureCode\Bundle\Cqrs\Tests\App\Event\TableCreatedEvent;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\TableRepository;
+use SoureCode\Bundle\Cqrs\Tests\App\Storage;
 use SoureCode\Component\Cqrs\CommandHandlerInterface;
 
 /**
@@ -21,11 +21,11 @@ use SoureCode\Component\Cqrs\CommandHandlerInterface;
  */
 class CreateTableCommandHandler implements CommandHandlerInterface
 {
-    private TableRepository $repository;
+    private Storage $storage;
 
-    public function __construct(TableRepository $repository)
+    public function __construct(Storage $storage)
     {
-        $this->repository = $repository;
+        $this->storage = $storage;
     }
 
     public function __invoke(CreateTableCommand $command)
@@ -34,7 +34,7 @@ class CreateTableCommandHandler implements CommandHandlerInterface
 
         $table = new Table($id);
 
-        $this->repository->persist($table);
+        $this->storage->set((string) $id, $table);
 
         return yield new TableCreatedEvent($id);
     }

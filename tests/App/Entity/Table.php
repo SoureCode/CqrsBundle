@@ -12,25 +12,18 @@ namespace SoureCode\Bundle\Cqrs\Tests\App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\TableRepository;
 use Symfony\Component\Uid\Ulid;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  */
-#[ORM\Table(name: '`table`')]
-#[ORM\Entity(repositoryClass: TableRepository::class)]
 class Table
 {
-    #[ORM\Id]
-    #[ORM\Column(type: 'ulid')]
     protected Ulid $id;
 
     /**
-     * @var Collection<int, Tab> $tabs
+     * @var Collection<int, Tab>
      */
-    #[ORM\OneToMany(mappedBy: 'table', targetEntity: Tab::class)]
     protected Collection $tabs;
 
     public function __construct(Ulid $id)

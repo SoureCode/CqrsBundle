@@ -11,31 +11,21 @@
 namespace SoureCode\Bundle\Cqrs\Tests\App\Entity;
 
 use DateTimeImmutable;
-use Doctrine\ORM\Mapping as ORM;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\OrderRepository;
 use Symfony\Component\Uid\Ulid;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  */
-#[ORM\Table(name: '`order`')]
-#[ORM\Entity(repositoryClass: OrderRepository::class)]
 class Order
 {
-    #[ORM\Column(nullable: false)]
     protected ?DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: false)]
     protected ?bool $done = null;
 
-    #[ORM\Id]
-    #[ORM\Column(type: 'ulid')]
     protected Ulid $id;
 
-    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'orders')]
     protected ?Product $product = null;
 
-    #[ORM\ManyToOne(targetEntity: Tab::class, inversedBy: 'orders')]
     protected ?Tab $tab = null;
 
     public function __construct(Ulid $id)

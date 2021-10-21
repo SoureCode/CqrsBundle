@@ -15,9 +15,7 @@ use Exception;
 use SoureCode\Bundle\Cqrs\Tests\App\Command\PlaceOrderCommand;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Order;
 use SoureCode\Bundle\Cqrs\Tests\App\Event\OrderPlacedEvent;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\OrderRepository;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\ProductRepository;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\TabRepository;
+use SoureCode\Bundle\Cqrs\Tests\App\Storage;
 use SoureCode\Component\Cqrs\CommandHandlerInterface;
 
 /**
@@ -25,17 +23,11 @@ use SoureCode\Component\Cqrs\CommandHandlerInterface;
  */
 class PlaceOrderCommandHandler implements CommandHandlerInterface
 {
-    private OrderRepository $orderRepository;
+    private Storage $storage;
 
-    private ProductRepository $productRepository;
-
-    private TabRepository $tabRepository;
-
-    public function __construct(TabRepository $tabRepository, ProductRepository $productRepository, OrderRepository $orderRepository)
+    public function __construct(Storage $storage)
     {
-        $this->tabRepository = $tabRepository;
-        $this->productRepository = $productRepository;
-        $this->orderRepository = $orderRepository;
+        $this->storage = $storage;
     }
 
     public function __invoke(PlaceOrderCommand $command)
@@ -44,13 +36,13 @@ class PlaceOrderCommandHandler implements CommandHandlerInterface
         $tabId = $command->getTabId();
         $productId = $command->getProductId();
 
-        $tab = $this->tabRepository->get($tabId);
+        $tab = $this->storage->get((string) $tabId);
 
         if (!$tab->isOpen()) {
             throw new Exception('Tab is not open.');
         }
 
-        $product = $this->productRepository->get($productId);
+        $product = $this->storage->get((string) $productId);
 
         $order = new Order($id);
         $order->setProduct($product);
@@ -59,7 +51,7 @@ class PlaceOrderCommandHandler implements CommandHandlerInterface
 
         $tab->addOrder($order);
 
-        $this->orderRepository->persist($order);
+        $this->storage->set((string) $id, $order);
 
         return yield new OrderPlacedEvent($tabId);
     }

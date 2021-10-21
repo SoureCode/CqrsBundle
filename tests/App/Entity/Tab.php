@@ -12,40 +12,29 @@ namespace SoureCode\Bundle\Cqrs\Tests\App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\TabRepository;
 use Symfony\Component\Uid\Ulid;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  */
-#[ORM\Entity(repositoryClass: TabRepository::class)]
 class Tab
 {
-    #[ORM\Column(nullable: true)]
     protected ?int $given = null;
 
-    #[ORM\Id]
-    #[ORM\Column(type: 'ulid')]
     protected Ulid $id;
 
-    #[ORM\Column(nullable: false)]
     protected ?bool $open = null;
 
     /**
-     * @var Collection<int, Order> $orders
+     * @var Collection<int, Order>
      */
-    #[ORM\OneToMany(mappedBy: 'tab', targetEntity: Order::class)]
     protected Collection $orders;
 
-    #[ORM\Column(nullable: true)]
     protected ?int $paid = null;
 
-    #[ORM\Column(nullable: true)]
-    protected ?int $total = null;
-
-    #[ORM\ManyToOne(targetEntity: Table::class, inversedBy: 'tabs')]
     protected ?Table $table = null;
+
+    protected ?int $total = null;
 
     public function __construct(Ulid $id)
     {
@@ -112,6 +101,11 @@ class Tab
         return $this->total;
     }
 
+    public function setTotal(?int $total): void
+    {
+        $this->total = $total;
+    }
+
     public function isOpen(): ?bool
     {
         return $this->open;
@@ -132,10 +126,5 @@ class Tab
     public function setOpen(?bool $open): void
     {
         $this->open = $open;
-    }
-
-    public function setTotal(?int $total): void
-    {
-        $this->total = $total;
     }
 }

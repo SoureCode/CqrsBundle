@@ -15,9 +15,7 @@ use SoureCode\Bundle\Cqrs\Tests\App\Command\CloseTabCommand;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Order;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Tab;
 use SoureCode\Bundle\Cqrs\Tests\App\Event\TabClosedEvent;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\OrderRepository;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\PriceRepository;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\TabRepository;
+use SoureCode\Bundle\Cqrs\Tests\App\Storage;
 use SoureCode\Component\Cqrs\CommandHandlerInterface;
 
 /**
@@ -25,20 +23,11 @@ use SoureCode\Component\Cqrs\CommandHandlerInterface;
  */
 class CloseTabCommandHandler implements CommandHandlerInterface
 {
-    private OrderRepository $orderRepository;
+    private Storage $storage;
 
-    private PriceRepository $priceRepository;
-
-    private TabRepository $tabRepository;
-
-    public function __construct(
-        TabRepository $tabRepository,
-        OrderRepository $orderRepository,
-        PriceRepository $priceRepository
-    ) {
-        $this->tabRepository = $tabRepository;
-        $this->orderRepository = $orderRepository;
-        $this->priceRepository = $priceRepository;
+    public function __construct(Storage $storage)
+    {
+        $this->storage = $storage;
     }
 
     public function __invoke(CloseTabCommand $command)
@@ -51,13 +40,13 @@ class CloseTabCommandHandler implements CommandHandlerInterface
             throw new Exception('Given cannot be less than paid.');
         }
 
-        $tab = $this->tabRepository->get($id);
+        $tab = $this->storage->get((string) $id);
 
         if (!$tab->isOpen()) {
             throw new Exception('Tab already closed.');
         }
 
-        if ($this->orderRepository->hasOpenOrders($tab)) {
+        if ($this->storage->hasOpenOrders($tab)) {
             throw new Exception('Tab has still open orders.');
         }
 
@@ -72,7 +61,7 @@ class CloseTabCommandHandler implements CommandHandlerInterface
         $tab->setGiven($given);
         $tab->setPaid($paid);
 
-        $this->tabRepository->persist($tab);
+        $this->storage->set((string) $id, $tab);
 
         return yield new TabClosedEvent($id);
     }
@@ -86,7 +75,7 @@ class CloseTabCommandHandler implements CommandHandlerInterface
          */
         foreach ($tab->getOrders() as $order) {
             $product = $order->getProduct();
-            $price = $this->priceRepository->getPrice($order);
+            $price = $this->storage->getPrice($order);
 
             if (!$price) {
                 throw new Exception('Missing price for product "'.$product->getName().'".');

@@ -14,8 +14,7 @@ use Exception;
 use SoureCode\Bundle\Cqrs\Tests\App\Command\OpenTabCommand;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Tab;
 use SoureCode\Bundle\Cqrs\Tests\App\Event\TabOpenedEvent;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\TableRepository;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\TabRepository;
+use SoureCode\Bundle\Cqrs\Tests\App\Storage;
 use SoureCode\Component\Cqrs\CommandHandlerInterface;
 
 /**
@@ -23,14 +22,11 @@ use SoureCode\Component\Cqrs\CommandHandlerInterface;
  */
 class OpenTabCommandHandler implements CommandHandlerInterface
 {
-    private TabRepository $tabRepository;
+    private Storage $storage;
 
-    private TableRepository $tableRepository;
-
-    public function __construct(TabRepository $tabRepository, TableRepository $tableRepository)
+    public function __construct(Storage $storage)
     {
-        $this->tabRepository = $tabRepository;
-        $this->tableRepository = $tableRepository;
+        $this->storage = $storage;
     }
 
     public function __invoke(OpenTabCommand $command)
@@ -38,9 +34,9 @@ class OpenTabCommandHandler implements CommandHandlerInterface
         $id = $command->getTabId();
         $tableId = $command->getTableId();
 
-        $table = $this->tableRepository->get($tableId);
+        $table = $this->storage->get((string) $tableId);
 
-        if ($this->tabRepository->hasOpenTab($table)) {
+        if ($this->storage->hasOpenTab($table)) {
             throw new Exception('Table is already in use.');
         }
 
@@ -48,7 +44,7 @@ class OpenTabCommandHandler implements CommandHandlerInterface
         $tab->setOpen(true);
         $tab->setTable($table);
 
-        $this->tabRepository->persist($tab);
+        $this->storage->set((string) $id, $tab);
 
         return yield new TabOpenedEvent($id);
     }

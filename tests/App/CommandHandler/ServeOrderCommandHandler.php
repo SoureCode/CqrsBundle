@@ -13,7 +13,7 @@ namespace SoureCode\Bundle\Cqrs\Tests\App\CommandHandler;
 use Exception;
 use SoureCode\Bundle\Cqrs\Tests\App\Command\ServeOrderCommand;
 use SoureCode\Bundle\Cqrs\Tests\App\Event\OrderServedEvent;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\OrderRepository;
+use SoureCode\Bundle\Cqrs\Tests\App\Storage;
 use SoureCode\Component\Cqrs\CommandHandlerInterface;
 
 /**
@@ -21,17 +21,17 @@ use SoureCode\Component\Cqrs\CommandHandlerInterface;
  */
 class ServeOrderCommandHandler implements CommandHandlerInterface
 {
-    private OrderRepository $orderRepository;
+    private Storage $storage;
 
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(Storage $storage)
     {
-        $this->orderRepository = $orderRepository;
+        $this->storage = $storage;
     }
 
     public function __invoke(ServeOrderCommand $command)
     {
         $id = $command->getId();
-        $order = $this->orderRepository->get($id);
+        $order = $this->storage->get((string) $id);
 
         if ($order->isDone()) {
             throw new Exception('Order was already served.');
@@ -39,7 +39,7 @@ class ServeOrderCommandHandler implements CommandHandlerInterface
 
         $order->setDone(true);
 
-        $this->orderRepository->persist($order);
+        $this->storage->set((string) $id, $order);
 
         return yield new OrderServedEvent($id);
     }

@@ -11,27 +11,19 @@
 namespace SoureCode\Bundle\Cqrs\Tests\App\Entity;
 
 use DateTimeImmutable;
-use Doctrine\ORM\Mapping as ORM;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\PriceRepository;
 use Symfony\Component\Uid\Ulid;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
  */
-#[ORM\Entity(repositoryClass: PriceRepository::class)]
 class Price
 {
-    #[ORM\Column(nullable: false)]
     protected ?DateTimeImmutable $effectiveAt = null;
 
-    #[ORM\Id]
-    #[ORM\Column(type: 'ulid')]
     protected Ulid $id;
 
-    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'prices')]
     protected ?Product $product = null;
 
-    #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
     protected ?int $value = null;
 
     public function __construct(Ulid $id)

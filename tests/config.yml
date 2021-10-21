@@ -6,22 +6,6 @@ soure_code_cqrs:
     query_bus:
         message_bus_id: query.bus
 
-doctrine:
-    dbal:
-        url: '%env(DATABASE_URL)%'
-        logging: false
-    orm:
-        auto_generate_proxy_classes: true
-        naming_strategy: 'doctrine.orm.naming_strategy.underscore_number_aware'
-        auto_mapping: true
-        mappings:
-            App:
-                is_bundle: false
-                type: attribute
-                dir: '%kernel.project_dir%/Entity'
-                prefix: 'SoureCode\Bundle\Cqrs\Tests\App'
-                alias: App
-
 monolog:
     handlers:
         main:
@@ -43,7 +27,6 @@ framework:
             command.bus:
                 middleware:
                     - validation
-                    - doctrine_transaction
             query.bus:
                 middleware:
                     - validation
@@ -61,6 +44,8 @@ services:
         resource: './App/'
         exclude:
             - './App/Entity/'
+
+    SoureCode\Bundle\Cqrs\Tests\App\Storage: ~
 
     command.bus.test:
         public: true

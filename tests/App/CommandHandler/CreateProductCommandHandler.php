@@ -13,7 +13,7 @@ namespace SoureCode\Bundle\Cqrs\Tests\App\CommandHandler;
 use SoureCode\Bundle\Cqrs\Tests\App\Command\CreateProductCommand;
 use SoureCode\Bundle\Cqrs\Tests\App\Entity\Product;
 use SoureCode\Bundle\Cqrs\Tests\App\Event\ProductCreatedEvent;
-use SoureCode\Bundle\Cqrs\Tests\App\Repository\ProductRepository;
+use SoureCode\Bundle\Cqrs\Tests\App\Storage;
 use SoureCode\Component\Cqrs\CommandHandlerInterface;
 
 /**
@@ -21,11 +21,11 @@ use SoureCode\Component\Cqrs\CommandHandlerInterface;
  */
 class CreateProductCommandHandler implements CommandHandlerInterface
 {
-    private ProductRepository $repository;
+    private Storage $storage;
 
-    public function __construct(ProductRepository $repository)
+    public function __construct(Storage $storage)
     {
-        $this->repository = $repository;
+        $this->storage = $storage;
     }
 
     public function __invoke(CreateProductCommand $command)
@@ -36,7 +36,7 @@ class CreateProductCommandHandler implements CommandHandlerInterface
 
         $product->setName($command->getName());
 
-        $this->repository->persist($product);
+        $this->storage->set((string) $id, $product);
 
         return yield new ProductCreatedEvent($id);
     }
