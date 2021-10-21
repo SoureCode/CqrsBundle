@@ -20,7 +20,6 @@ framework:
     validation:
         enabled: true
     messenger:
-        reset_on_message: true
         default_bus: main.bus
         buses:
             main.bus: ~
