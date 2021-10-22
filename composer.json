@@ -13,7 +13,7 @@
     "require": {
         "php": ">=8.0",
         "doctrine/common": "^3.2",
-        "sourecode/cqrs": "^0.1",
+        "sourecode/cqrs": "dev-master",
         "symfony/config": "^5.3 || ^6.0",
         "symfony/dependency-injection": "^5.3 || ^6.0",
         "symfony/http-kernel": "^5.3 || ^6.0",
