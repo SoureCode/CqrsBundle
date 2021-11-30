@@ -11,18 +11,18 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": "^8.0 || ^8.1",
         "doctrine/common": "^3.2",
         "sourecode/cqrs": "dev-master",
-        "symfony/config": "^5.3 || ^6.0",
-        "symfony/dependency-injection": "^5.3 || ^6.0",
-        "symfony/http-kernel": "^5.3 || ^6.0",
-        "symfony/uid": "^5.3 || ^6.0"
+        "symfony/config": "^5.3 || ^5.4 || ^6.0 || ^6.1",
+        "symfony/dependency-injection": "^5.3 || ^5.4 || ^6.0 || ^6.1",
+        "symfony/http-kernel": "^5.3 || ^5.4 || ^6.0 || ^6.1",
+        "symfony/uid": "^5.3 || ^5.4 || ^6.0 || ^6.1"
     },
     "require-dev": {
-        "symfony/messenger": "^5.3 || ^6.0",
-        "symfony/validator": "^5.3 || ^6.0",
-        "symfony/framework-bundle": "^5.3 || ^6.0"
+        "symfony/messenger": "^5.3 || ^5.4 || ^6.0 || ^6.1",
+        "symfony/validator": "^5.3 || ^5.4 || ^6.0 || ^6.1",
+        "symfony/framework-bundle": "^5.3 || ^5.4 || ^6.0 || ^6.1"
     },
     "autoload": {
         "psr-4": {
